@@ -1,0 +1,985 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{bbm}
+\usepackage{tikz-cd}
+\usepackage{mathrsfs}
+\usepackage{stmaryrd}
+\usepackage[hmargin={2  cm,1.5cm},
+top=2cm, marginpar=2cm
+]{geometry}
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+
+
+
+%-----------------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+\definecolor{halfgray}{gray}{0.55}
+\definecolor{ipython_frame}{RGB}{207, 207, 207}
+\definecolor{ipython_bg}{RGB}{247, 247, 247}
+\definecolor{ipython_red}{RGB}{186, 33, 33}
+\definecolor{ipython_green}{RGB}{0, 128, 0}
+\definecolor{ipython_cyan}{RGB}{64, 128, 128}
+\definecolor{ipython_purple}{RGB}{170, 34, 255}
+
+\usepackage{listings}
+
+
+%%
+%% Python definition (c) 1998 Michael Weber
+%% Additional definitions (2013) Alexis Dimitriadis
+%% modified by me (should not have empty lines)
+%%
+\lstdefinelanguage{iPython}{
+    morekeywords={access,and,break,class,continue,def,del,elif,else,except,exec,finally,for,from,global,if,import,in,is,lambda,not,or,pass,print,raise,return,try,while},%
+    %
+    % Built-ins
+    morekeywords=[2]{abs,all,any,basestring,bin,bool,bytearray,callable,chr,classmethod,cmp,compile,complex,delattr,dict,dir,divmod,enumerate,eval,execfile,file,filter,float,format,frozenset,getattr,globals,hasattr,hash,help,hex,id,input,int,isinstance,issubclass,iter,len,list,locals,long,map,max,memoryview,min,next,object,oct,open,ord,pow,property,range,raw_input,reduce,reload,repr,reversed,round,set,setattr,slice,sorted,staticmethod,str,sum,super,tuple,type,unichr,unicode,vars,xrange,zip,apply,buffer,coerce,intern},%
+    %
+    sensitive=true,%
+    morecomment=[l]\#,%
+    morestring=[b]',%
+    morestring=[b]",%
+    %
+    morestring=[s]{'''}{'''},% used for documentation text (mulitiline strings)
+    morestring=[s]{"""}{"""},% added by Philipp Matthias Hahn
+    %
+    morestring=[s]{r'}{'},% `raw' strings
+    morestring=[s]{r"}{"},%
+    morestring=[s]{r'''}{'''},%
+    morestring=[s]{r"""}{"""},%
+    morestring=[s]{u'}{'},% unicode strings
+    morestring=[s]{u"}{"},%
+    morestring=[s]{u'''}{'''},%
+    morestring=[s]{u"""}{"""},%
+    %
+    % {replace}{replacement}{lenght of replace}
+    % *{-}{-}{1} will not replace in comments and so on
+    literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+    {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+    {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+    {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+    {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+    {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+    {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+    {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+    {€}{{\EUR}}1 {£}{{\pounds}}1,
+    %
+    literate=
+    *{+}{{{\color{ipython_purple}+}}}1
+    {-}{{{\color{ipython_purple}-}}}1
+    {*}{{{\color{ipython_purple}$^\ast$}}}1
+    {/}{{{\color{ipython_purple}/}}}1
+    {^}{{{\color{ipython_purple}\^{}}}}1
+    {?}{{{\color{ipython_purple}?}}}1
+    {!}{{{\color{ipython_purple}!}}}1
+    {\%}{{{\color{ipython_purple}\%}}}1
+    {<}{{{\color{ipython_purple}<}}}1
+    {>}{{{\color{ipython_purple}>}}}1
+    {|}{{{\color{ipython_purple}|}}}1
+    {\&}{{{\color{ipython_purple}\&}}}1
+    {~}{{{\color{ipython_purple}~}}}1
+    %
+    {==}{{{\color{ipython_purple}==}}}2
+    {<=}{{{\color{ipython_purple}<=}}}2
+    {>=}{{{\color{ipython_purple}>=}}}2
+    %
+    {+=}{{{+=}}}2
+    {-=}{{{-=}}}2
+    {*=}{{{$^\ast$=}}}2
+    {/=}{{{/=}}}2,
+    %
+%   identifierstyle=\color{red}\ttfamily,
+    commentstyle=\color{ipython_cyan}\ttfamily,
+    stringstyle=\color{ipython_red}\ttfamily,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    %
+    rulecolor=\color{ipython_frame},
+    frame=single,
+    frameround={t}{t}{t}{t},
+    framexleftmargin=6mm,
+    numbers=left,
+    numberstyle=\tiny\color{halfgray},
+    %
+    %
+    backgroundcolor=\color{ipython_bg},
+    %   extendedchars=true,
+    basicstyle=\scriptsize\ttfamily,
+    keywordstyle=\color{ipython_green}\ttfamily,
+    escapechar=\¢,escapebegin=\color{ipython_green},
+}
+
+
+%-----------------------------------------------------------------------
+
+
+\title{A Classificação de Superfícies e o Teorema da Curva de Jordan.}
+\author{Pedro Vaz Pimenta}
+
+
+
+\newtheorem{mydef}{Definição}[section]
+\newtheorem{lem}[mydef]{Lema}
+\newtheorem{thrm}[mydef]{Teorema}
+\newtheorem{mthrm}[mydef]{Metateorema}
+\newtheorem{cor}[mydef]{Corolário}
+\newtheorem{prop}[mydef]{Proposição}
+\newtheorem{conj}[mydef]{Conjectura}
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{section}.\arabic{equation}}
+\def\dem{\par\smallbreak\noindent {\textit{ Demonstração:}} \ }
+\def\eop{\hfill\rule{2.5mm}{2.5mm} \\ }
+
+\def\pausa{\par\smallbreak\noindent {\textbf{Pausa.}} \ }
+
+%
+%
+\theoremstyle{definition}
+\newtheorem{obs}[mydef]{Observação}
+\newtheorem{propris}[mydef]{Propriedades}
+\newtheorem{axi}[mydef]{Axioma}
+\newtheorem{ex}[mydef]{Exemplo}
+\newtheorem{exerc}[mydef]{Exercício}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    Este trabalho tem como objetivo principal classificar as superfícies compactas, conexas e sem bordo, além de demonstrar o Teorema da Curva de Jordan, que acaba saindo como consequência das ferramentas utilizadas na demonstração da classificação. Utilizaremos duas abordagens neste trabalho, o primeiro será mais combinatório e elementar, utilizado para demonstrar que todas as superfícies são homeomorfas a uma triangulação, enquanto o segundo utilizará Homologia para mostrar que a lista de superfícies usadas na classificação não pode ser reduzida.   
+\end{abstract}
+
+\section{Definições e resultados básicos} 
+
+Primeiramente, definiremos precisamente o conceito de superfície, que é um caso particular da seguinte:
+
+
+\begin{mydef}
+
+    Uma Variedade Topológica sem fronteira de dimensão $n$, sendo $n$ um inteiro positivo que chamaremos de dimensão da variedade, é um espaço topológico $M$ que é Hausdorff com base enumerável localmente homeomorfo a um aberto de $\mathbb{R}^n$, ou seja, para todo $p\in M$ existe um aberto $A\subset M$ com $p\in A$ e $A\cong U$, sendo $U\subset \mathbb{R}^n$ uma bola aberta. Se $n=2$, dizemos que $M$ é uma superfície. 
+
+\end{mydef}
+
+Geralmente, quando falamos em superfícies, estamos supondo que ela é compacta e conexa. O objetivo do texto será aproximar estas superfícies a casos mais simples, que virão da seguinte:
+
+\begin{mydef}
+
+    Sejam $v_0,...,v_k \in \mathbb{R}^n$ tais que $v_1-v_0,...,v_k-v_0$ são linearmente independentes, o $k$-simplexo gerado por eles será definido como $$[v_0,...,v_k] := \left\{\sum_{i=0}^k \lambda_i v_i : \lambda_i \geq 0, \sum_{i=0}^k \lambda_i = 1\right\}.$$ Temos que $k$ é a dimensão, o pontos $v_i$ são chamados de vértices, também usamos a seguinte notação para os $k-1$-simplexos $$[v_0,..., \overset{ \wedge}{v_i} , ... v_k] := [v_0,..., v_{i-1} , v_{i+1} , ... v_k],$$ que gerealmente chamamos de face.    
+
+\end{mydef}
+
+Dotamos os simplexos da topologia de subespaço. Assim, notamos que $2$-simplexos não são superfícies (ou, em geral, $k$-simplexos não são variedades topológicas sem fronteira), apesar de serem subconjuntos conexos (por caminhos) de $\mathbb{R}^n$ e convexos (mais que isso, são a envoltória convexa dos pontos que o geram). Para que seja, precisaremos de um pouco mais: 
+
+\begin{mydef}
+
+    Um complexo simplicial $K$ é uma coleção de simplexos $\mathbb{R}^n$ satisfazendo: \\
+    
+    (i) se $s\in K$ então toda face de $s$ está em $K$; \\
+    
+    (ii) a intersecção de dois simplexos de $K$ é ou vazia ou uma face de ambos; \\
+    
+    (iii) $K$ é localmente finito, ou seja, dado $p\in s\in K$, existe uma vizinhança $p\in V\subset s$ tal que $V\cap r \neq \emptyset$ apenas para finitos $r\in K$. \\
+    
+    A dimensão de $K$ corresponde à maior dimensão dos seus elementos. Denotamos o poliedro gerado por $K$ como $\mathfrak{P}(K):=\bigcup K$ com a topologia de subespaço. Se a dimensão do complexo simplicial for $2$ e todo $1$-simplexo é face de exatamente dois $2$-simplexos, dizemos que o poliedro gerado é uma triangulação. Por abuso de notação, iremos nos referir, geralmente, ao poliedro gerador por um complexo como o próprio complexo.  
+
+\end{mydef}
+
+Podemos notar que uma triangulação é uma superfície, apesar de que não será necessário mostrar especificamente esta afirmação, afinal, ela segue de um dos principais resultados deste texto, que será o de que toda superfície é homeomorfa a uma triangulação. Para falarmos sobre o Teorema da Curva de Jordan usaremos a seguinte:
+
+\begin{mydef}
+
+    Uma curva simples num espaço topológico $X$ é a imagem de uma função injetora contínua $f:[0,1]\rightarrow X$ que, com a topologia de subespaço, é homeomorfa a $[0,1]$, dizemos que uma curva simples é fechada usando uma definição análoga e adicionando a condição $f(0)=f(1)$, sendo que, neste caso, a imagem da função com a topologia de subespaço deverá ser homeomorfa a $S^1$. Se $X$ é um espaço euclidiano e $f([0,1])$ é a união de finitos segmentos de retas, dizemos que a curva simples é poligonal. Definimos, ainda, um espaço topológico $X$ como conexo por curvas simples de forma análoga à conexidade de caminhos, só que com curvas simples. 
+
+\end{mydef}
+
+Primeiramente, notamos que um espaço conexo pro curvas simples é claramente conexo por caminhos, porém um espaço conexo por caminhos não precisa ser conexo por curvas simples: Seja $X=\frac{\{0,1\}\times [0,\infty[ }{ \sim} $ em que $(0,x)\sim (1,y)$ se, e somente se, $x=y$ e $x,y\neq 0$ (ou seja, a semi-reta com duas origens, que é análoga à clássica reta com duas origens), este conjunto é conexo por caminhos, inclusive as duas origens podem ser conectadas por um caminho, porém elas não podem ser conectadas por uma curva simples, pois isto implicaria que $[0,1]$ não é Hausdorff. Porém: 
+
+\begin{lem}
+
+    Se o espaço é Hausdorff, os dois tipos de conexidade são equivalentes. 
+
+\end{lem}
+
+\dem Sejam $x,y\in X$ e $f:[0,1]\rightarrow X$ um caminho tal que $f(0)=x$ e $f(1)=y$, sem perda de generalidade, consideramos $f$ tal que $f^{-1}(\{x\})=\{0\}$ e $f^{-1}(\{y\})=\{1\}$, pois, como $X$ é Hausdorff, podemos separar $x$ e $y$ por abertos que deverão ter imagens inversas distintas em $[0,1]$ e, nestes abertos, teremos respectivamente o maior e o menor valor que tem como imagem $x$ e $y$, assim podemos reparametrizar $f$ para que tenhamos a propriedade desejada. 
+
+Se $f$ é injetora, não há mais nada a ser feito, assim, caso não seja, o conjunto $P(f)\subset Im(f)$ de pontos com pré-imagem não unitária é não vazio, seja então $p_0\in P(f)$, como $X$ é Hausdorff, ele é em particular $T_1$ e $\{p\}$ é fechado, logo sua pré-imagem também é um fechado num compacto, logo também compacto, que em particular é limitado, portanto, como é fechado, terá máximo e mínimo, assim, sejam $a_0$ e $b_0$ o mínimo e o máximo respectivamente, com isto, podemos tomar o espaço quociente $I_0=[0,1]/[a_0,b_0]\cong [0,1]$, ou seja, o espaço quociente em que dois pontos são equivalentes se, e somente se, eles estão no intervalo $[a,b]$, com isto temos um novo caminho $f_1:I_1\rightarrow X$ em que $p_0\notin P(f_1)$. Se $ P(f_1)=\emptyset$, acabou, se não, seja $p_1\in P(f_1)$, analogamente, podemos definir o intervalo $[a_1,b_1]$ (que é disjunto do anterior) e tomar $I_1=[0,1]/([a_0,b_0]\sqcup [a_1,b_1])\cong [0,1]$ definindo o quociente de forma análoga (cada intervalo disjunto será colapsado num ponto). 
+
+Na pior das hipóteses, esse processo irá continuar infinitamente e irá terminar quando tivermos $P(f_\alpha)=\emptyset$ e $I_\alpha = [0,1]/B$ sendo $$B=\bigsqcup_{i\leq \alpha} [a_i,b_i]$$ e $x\sim y$ se, e somente se, existe $i\leq \alpha$ tal que $x,y\in [a_i,b_i]$. Queremos demonstrar que $I_\alpha \cong [0,1]$. Como a topologia de $[0,1]$ pode ser dada pela ordem, isto induz uma topologia de ordem em $I_\alpha$ em que $[x]<[y]$ se, e somente se, $x<y$, que é bem definida pelo fato dos intervalos serem disjuntos. Primeiramente, temos que $I_\alpha$ é separável, pois $[0,1]$ é, pois densos são preservados pelo mapa quociente. Além disso, temos que é $I_\alpha$ completo: se $A\subset I_\alpha$ é limitado e não vazio com cota superior $[x]$, então ele terá supremo, que é a classe do supremo da pré-imagem de $A$(o caso do ínfimo é análogo). Analogamente, podemos mostrar que a ordem em $I_\alpha$ é densa e, em particular, $I_\alpha$ não possui apenas as classes $[0]$ e $[1]$, disso temos que $I_\alpha\setminus \{[0],[1]\}$ é um conjunto total, completa e densamente ordenado, além de ser separável e não possuir máximo e nem mínimo, portanto ele é (no sentido de ordem) isomorfo a $\mathbb{R}$ (2.29 de \textbf{[6]}), em particular, é homeomorfo, donde segue que $I_\alpha$ é homeomorfo à compactificação de dois pontos de $\mathbb{R}$ que, por sua vez, é homeomorfo a $[0,1]$. 
+
+\ \eop
+
+A ideia intuitiva por trás da demonstração é que podemos encontrar ``loops'' no caminho e excluí-los um a um, sendo que, no final, ficamos (no pior dos casos) com um conjunto análogo ao complementar do conjunto de Cantor e, neste caso, podemos ligar os ``gaps'' de forma a recuperar um intervalo. Com isto, podemos demonstrar a seguinte: 
+
+\begin{prop}
+
+    Se $A\subset \mathbb{R}^2$ é um aberto conexo por caminhos, então é conexo por curvas simples poligonais.
+
+\end{prop}
+
+\dem Como a propriedade Hausdorff é hereditária, temos que $A$ será conexo por curvas simples pelo lema anterior. Sejam então $x,y\in A$ e seja $f:[0,1]\rightarrow A$ uma curva simples com $f(0)=x$ e $f(1)=y$. Seja $P\subset [0,1]$ o conjunto dos $t\in P$ tais que existe um caminho poligonal ligando $x$ e $f(t)$ (este conjunto é claramente não vazio por estarmos no espaço euclidiano, que claramente é localmente conexo por caminhos poligonais, já que existe uma base formada por conjuntos convexos). Se $t_0 = \sup P$, suponha que $t_0<1$, como a propriedade de conexidade por caminhos simples poligonais é local, podemos definir $t_1>t_0$ tal que $t_1\in A$, temos uma contradição, logo segue o que queríamos. \eop
+
+Notamos ainda que, no contexto de abertos no plano $\mathbb{R}^2$, os conjuntos são localmente conexos por caminhos, desta forma, se um conjunto aberto for conexo, então ele também será conexo por caminhos. Com esta observação, dentro do contexto em que estamos, podemos utilizar os termos conexo, conexo por caminhos, conexo por curvas simples e conexo por curvas simples poligonais sem nenhuma distinção, pois são todos equivalentes.
+Como a demonstração adiante será feita usando grafos, precisaremos da seguinte: 
+
+
+\begin{mydef}
+
+    Um grafo $G$ é um par $(V(G),E(G))$ em que o primeiro elemento é um conjunto cujos elementos são chamados de vértices e $E(G)\subset \wp(V(G))\times X$, para $X$ não vazio (geralmente unitário e pode ser ignorado) é uma família de elementos cuja primeira coordenada são conjuntos de vértices com dois elementos, que são chamados de arestas e representados como $v_1v_2 := \{v_1,v_2\}\subset V(G)$ se $X$ é unitário, sendo que dizemos que $v_1$ e $v_2$ são extremos de $v_1v_2$. Além disso, temos que: \\
+    
+    - Se $X$ tem mais de um elemento, algumas arestas podem ser múltiplas, ou seja, pode haver mais de uma aresta com $v_1$ e $v_2$ como extremos. \\
+    
+    - Se $A\subset V(G)\cup E(G)$ então $G-A$ é o grafo $G$ excluindo as arestas em $A$ e os vértices de $A$ junto com arestas contendo os mesmos. \\
+    
+    - Isomorfismos entre grafos são definidos como bijeções que preservam a relação entre vértices e arestas. \\
+    
+    - Um caminho num grafo é um sub-grafo (isto é definido da maneira óbvia) com $n$ vértices $v_i$ e que contém as arestas $v_iv_{i+1}$, o qual é denotado por $v_1v_2...v_n$; se $v_1=v_n$ dizemos que o caminho é um ciclo. \\
+    
+    - Um grafo $G$ é conexo se quaisquer dois vértices estão num caminho e é $2$-conexo se $G-\{v\}$ é conexo para todo $v\in V(G)$. \\
+    
+    - Um grafo $G$ pode ser mergulhado num espaço topológico $X$ se podemos associar pontos de $X$ aos elementos de $V(G)$ e cada elemento de $E(G)$ pode ser associado a uma curva simples ligando os pontos associados aos vértices, sendo que elas só podem tocar outras curvas nas extremidades, assim, se $G$ é um grafo mergulhado em $\mathbb{R}^2$, dizemos que $G$ em $\mathbb{R}^2$ é um grafo plano e que $G$, como grafo abstrato, é um grafo planar.
+    
+\end{mydef}
+
+Com isto podemos provar o seguinte: 
+
+\begin{lem}
+
+    Se $G$ é um grafo planar, então $G$ pode ser mergulhado no plano de tal forma que as arestas são curvas simples poligonais.
+
+\end{lem}
+
+\dem Seja $A\subset \mathbb{R}^2$ a imagem de $G$ por um mergulho e $p\in A$ um vértice, assim, seja $D_p$ um disco fechado com centro em $p$ de forma que este conjunto intercepta apenas arestas contendo $p$, além disso, suponha que $D_p\cap D_q = \emptyset$ para quaisquer vértices $p,q\in A$. Para cada aresta $pq$ de $A$, seja $\gamma_{pq} = pq\setminus (\text{Int} (D_p)\cup \text{Int} (D_q))$. Isto nos dá um novo mergulho $A'$ em que as arestas são dadas por $\gamma_{pq}$ e as partes dentro dos discos $D_p$ são linhas retas. Utilizando o mesmo argumento de \textbf{1.6} podemos substituir $\gamma_{pq}$ por curvas simples poligonais, pois as extremidades de cada uma das curvas estão disjuntas. \eop
+
+Por fim, dado um grafo $G$, podemos refinar $G$ colocando mais vértices nas próprias arestas, ou seja, dada uma aresta $v_1,v_2$ adicionamos um novo vértice $v_3$ e a arestas $v_1v_3$ e $v_3v_2$, dizemos que o novo grafo é uma subdivisão do primeiro. Por fim, temos o seguinte lema técnico que será necessário adiante: 
+
+\begin{lem}
+
+    Se $G$ é 2-conexo e $H$ é subgrafo de $G$ também 2-conexo, então (um grafo isomorfo a) $G$ pode ser obtido de $H$ adicionando sucessivamente caminhos tais que cada um deles unirá dois vértices distintos sem passar por nenhum outro vértice que já existia. 
+
+\end{lem}
+
+\dem A demonstração é por indução sobre o número de arestas em $E(G)\setminus E(H)$. Se o número for zero, não há nada a fazer e $G=H$. Suponha válida a hipótese de indução, ou seja, o lema é válido para $G'$ e $H'$ tais que $|E(G')\setminus E(H')|\leq |E(G)\setminus E(H)|$. Assim, suponha que $H'$ é maximal para $G$, ou seja, o maior subgrafo próprio 2-conexo de $G'$ contendo $H$, com isto, se $H$ e $H'$ são distintos, podemos aplicar a hipótese de indução para o par $H'$ e $H$ e depois para $G$ e $H'$. Resta, portanto, mostrar o caso em que $H$ é maximal. Como $G$ é conexo, existe uma aresta $x_1x_2$ em $E(G)\setminus E(H)$ tal que $x_1\in H$, como $G-x_1$ é conexo, existe um caminho $P$ dado por $x_2...x_k$ com $x_k$ em $H$ e todos os outros vértices fora de $H$. Como $H\cup P\cup \{x_1x_2\}$ é 2-conexo, então este conjunto nada mais é do que $G$ pela maximalidade de $H$ e isto completa a demonstração. \eop 
+
+\section{O Teorema da curva de Jordan}
+
+Para demonstrar o Teorema da Curva de Jordan, começaremos com o caso mais simples, em que a curva é poligonal e a prova é padrão: 
+
+\begin{lem}
+
+    Se $C$ é uma curva simples poligonal e fechada em $\mathbb{R}^2$, então $\mathbb{R}^2\setminus C$ tem precisamente duas componentes conexas por caminhos (não vazias) que possuem $C$ como fronteira.
+
+\end{lem}
+
+\dem Suponha que existem três componentes conexas por caminhos (não vazias) distintas e sejam $x_1,x_2$ e $x_3$ pontos de cada uma delas respectivamente. Seja $D$ um disco tal que $D\cap C$ é um segmento de reta, então podemos unir $x_i$ com $D$ através de curvas poligonais que não tocam $C$. Note que, como $D\cap C$ é um segmento de reta, ele divide a fronteira de $D$ em duas componentes, pelo princípio das casas dos pombos, numa delas teremos o fim de dois caminhos ligando $x_i$ e $x_j$, o que nos dá um caminho que os liga; absurdo, pois eles estão em componentes distintas. Logo  $\mathbb{R}^2\setminus C$ tem no máximo duas componentes conexas. 
+
+Com isto, provaremos que $\mathbb{R}^2\setminus C$ não é conexo. Dado um ponto $p\in \mathbb{R}^2\setminus C$, consideramos uma semi-reta $L$ começando em $p$. O conjunto $L\cap C$ pode ser uma quantidade finita de intervalos (possivelmente degenerados como pontos) ou mesmo vazio e seja $I$ um intervalo que compõe esta intersecção. Como $L$ é uma semi-reta, podemos orientá-la e pontos numa vizinhança dos pontos da semi-reta podem estar em um dos dois lados possíveis, assim, dizemos que $C$ toca $L$ em $I$ e, ao entrar no intervalo, a curva está no mesmo lado em que ela sai, caso contrário, dizemos que $C$ cruza $L$. Se mudarmos continuamente a direção da semi-reta $L$ numa variação suficientemente pequena, a quantidade de vezes em que há cruzamento não muda exceto no caso da reta estar tocando um vértice, neste caso há a possibilidade da quantidade de cruzamentos aumentar em $2$ ou diminuir em $2$. Note que, em qualquer caso, a paridade da quantidade de cruzamentos é sempre constante. Logo, essa paridade depende apenas do ponto $p$. 
+
+Por fim, note que, se $p$ move numa curva simples poligonal em $\mathbb{R}^2\setminus C$, a paridade também não muda, ou seja, componentes conexas por caminhos possuem a mesma paridade. Finalmente, tome uma semi-reta que cruza $C$ exatamente uma vez, ela possuirá pontos com as duas paridades possíveis, logo concluímos que $\mathbb{R}^2\setminus C$ tem, de fato, duas componentes conexas por caminhos. \eop
+
+Com um pouco de cuidado nos detalhes, esta mesma demonstração pode ser adaptada para nos dar uma versão do Teorema para curvas simples fechadas $C^1$ (ou ainda $C^1$ por partes). A verdadeira dificuldade deste resultado está em pedir apenas continuidade, pois funções contínuas podem ser muito complicadas e esta propriedade de que uma mudança pequena no ângulo da semi-reta mantém a paridade da quantidade de intersecções com a curva não vale mais. 
+
+Desta forma, usando a mesma notação do lema anterior, notamos que estas duas regiões possuem a propriedade de que uma delas é limitada e a outra ilimitada, assim, dizemos que $\text{int}(C)$ é a região limitada associada à curva $C$, enquanto  $\text{ext}(C)$ é a ilimitada. Definimos também
+
+$$\begin{array}{cc}
+   \overline{\text{int}}(C) = \text{int}(C)\cup C &  \text{e} \\
+    \overline{\text{ext}}(C) = \text{ext}(C)\cup C. &
+\end{array}$$
+
+Com isto, podemos estender o resultado anterior:
+
+\begin{lem}
+
+    Seja $C$ uma curva simples fechada poligonal e $P$ um caminho simples poligonal em $\overline{\text{int}}(C)$ tal que $P$ liga pontos $p,q\in C$ e possui somente estes pontos em comum com $C$. Sejam $P_1$ e $P_2$ caminhos distintos em $C$ que ligam $p$ e $q$. Então $\mathbb{R}^2\setminus (C\cup P)$ possui exatamente três regiões cujas fronteiras são $C$, $P_1\cup P$ e $P_2\cup P$. 
+
+\end{lem}
+
+\dem Uma destas regiões claramente é $\text{ext}(C)$ que possui $C$ como fronteira. Usando o mesmo argumento de \textbf{2.1}, concluímos que adicionar $P$ a $C$ divide a região $\text{int}(C)$ em, no máximo, duas regiões, portanto, resta provar que tal adição resulta em, no mínimo, duas regiões. Assim, sejam $L_1$ e $L_2$ segmentos de reta que se cruzam em $p$ e $L_1$ é um segmento de $P$, sendo que $p$ é o único ponto que $L_2$ tem em comum com $C\cup P$. Usando novamente o argumento de \textbf{2.1}, os extremos de $L_2$ estão em $\text{int}(C)$ e em regiões distintas de $\mathbb{R}^2\setminus (P\cup P_1)$, logo também estão em regiões distintas de $\mathbb{R}^2\setminus (P\cup C)$\ \eop
+
+Deste lema podemos concluir que, se $r\in P_1\setminus \{ p,q \}$ e $s\in P_2\setminus \{ p,q \}$, então $r$ e $s$ não podem ser ligados por uma curva simples poligonal em $\overline{\text{int}}(C)$ sem cruzar $P$, e o mesmo vale para $\overline{\text{ext}}(C)$. Com isto temos:
+
+\begin{lem}
+
+    Seja $K_{3,3}$ o grafo com seis vértices $v_1,v_2,v_3,u_1,u_2,u_3$ e as nove arestas $v_i u_j$ com $1\leq i,j \leq 3$. Tal grafo não é planar. 
+
+\end{lem}
+
+\dem Suponha que $K_{3,3}$ é planar, logo pode ser mergulhado em $\mathbb{R}^2$ com arestas sendo curvas simples poligonais que só se tocam nos vértices. Desta forma, podemos notar que este grafo pode ser visto como um ciclo $C$ dado por $x_1x_2x_3x_4x_5x_6$ com três arestas $x_1x_4$, $x_2x_5$ e $x_3x_6$, ou seja, temos uma curva simples poligonal fechada representada pelo ciclo $C$ e três curvas simples poligonais ligando pontos distintos de tal ciclo. Logo, duas das três arestas anteriores devem estar ou em $\overline{\text{ext}}(C)$ ou em $\overline{\text{int}}(C)$ e elas não devem ter intersecções, porém isso contradiz a conclusão que tiramos de \textbf{2.2}, logo temos um absurdo, donde segue o que queríamos. \eop
+
+Com este resultado, podemos provar:
+
+\begin{prop}
+
+    Seja $C$ uma curva simples fechada em $\mathbb{R}^2$, então $\mathbb{R}^2\setminus C$ não é conexo por caminhos. 
+
+\end{prop}
+
+\dem Seja $L_1$ e $L_2$ retas verticais interceptando $C$ tais que $C$ não possui pontos à esquerda de $L_1$ e à direita de $L_2$. Sejam $p_i$ os pontos de $L_i\cap C$ com maior valor na segunda coordenada e sejam $P_1$ e $P_2$ as duas curvas distintas em $C$ ligando $p_1$ e $p_2$. Seja $L_3$ uma reta vertical entre $L_1$ e $L_2$. Como $P_1\cap L_3$ e $P_1\cap L_3$ são compactos e disjuntos, então $L_3$ possui um intervalo $L_4$ ligando $P_1$ e $P_2$ tenho apenas os extremos em comum com $C$. Seja agora $L_5$ uma curva poligonal ligando $p_1$ e $p_2$ sem cruzar com $C$ que consiste em caminhos verticais suficientemente ``altos'' cujos extremos são ligados por um segmento de reta horizontal (que claramente existe, pois $C$ é um conjunto limitado). Se $L_4$ e $L_5$ estão na mesma componente conexa por caminhos de $\mathbb{R}^2\setminus C$, então existe uma curva simples poligonal $L_6$ ligando $L_4$ e $L_5$ que não intercepta $C$, porém note que $C\cup L_4 \cup L_5 \cup L_6$ é um mergulho de $K_{3,3}$ em $\mathbb{R}^2$, o que é impossível. Logo $\mathbb{R}^2\setminus C$ não é conexo por caminhos. \eop 
+
+Com isto, generalizaremos ainda mais os resultados anteriores:
+
+\begin{lem}
+
+    Seja $\Gamma$ o mergulho de um grafo 2-conexo em $\mathbb{R}^2$ com pelo menos três vértices tais que cada aresta são curvas simples poligonais. Então $\mathbb{R}^2\setminus \Gamma$ possui $|E(\Gamma)|-|V(\Gamma)|+2$ regiões, cada uma com um ciclo de $\Gamma$ como fronteira.
+
+\end{lem}
+
+\dem Se $C$ for um ciclo em $\Gamma$, temos que o resultado vale para $\Gamma=C$ por \textbf{2.1}. Se não é o caso, podemos obter $\Gamma$ através de $C$ adicionando caminhos da forma como foi feito em \textbf{1.9}, sendo que cada caminho estará dentro de uma região e irá adicionar uma nova região por \textbf{2.2}. \eop
+
+Assim, para mergulhos $\Gamma$ de grafos em $\mathbb{R}^2$, as componentes conexas por caminho de $\mathbb{R}^2\setminus \Gamma$ serão faces do grafo, e dizemos que a face ilimitada é a face exterior, e, caso $\Gamma$ seja 2-conexo, a fronteira da face exterior é chamada de ciclo exterior. 
+
+Enquanto a união de grafos abstratos é feita da forma mais óbvia possível, quando fazemos a união de grafos mergulhados em $\mathbb{R}^2$ precisamos tomar alguns cuidados (sendo que o grafo resultante da união no mergulho será bem diferente da união de grafos abstratos), para isto, temos o:
+
+\begin{lem}
+
+    Sejam $\Gamma_1$ e $\Gamma_2$ grafos mergulhados em $\mathbb{R}^2$ tais que cada aresta é uma curva simples poligonal. Então a união de $\Gamma_1$ e $\Gamma_2$ (como imagens do mergulho no plano) resulta num conjunto que é a imagem de um grafo $\Gamma_3$ mergulhado em $\mathbb{R}^2$.
+
+\end{lem} 
+
+\dem Seja $\Gamma'_i$ a subdivisão de $\Gamma_i$ tal que cada aresta de $\Gamma'_i$ é um segmento de reta para $i=1,2$. Seja, ainda, $\Gamma''_i$ a subdivisão de $\Gamma'_i$ tal que adicionamos como novos vértices os pontos $p$ de arestas de $\Gamma'_i$ que tocam $\Gamma'_{3-i}$. Desta forma a união de grafos no nível abstrato de $\Gamma''_2$ e $\Gamma''_2$ nos dá um grafo que será o $\Gamma_3$ que queremos. \eop
+
+Podemos observar ainda que se, no lema anterior, os dois grafos forem 2-conexos e tiverem ao menos dois pontos em comum, então a união deles também será 2-conexa. Com esta observação, podemos trabalhar no seguinte:
+
+\begin{lem}
+ 
+    Sejam $\Gamma_1,...,\Gamma_k$ grafos 2-conexos mergulhados no plano tal que todas suas arestas são curvas simples poligonais, cada grafo $\Gamma_i$ tem pelo menos dois pontos em comum com $\Gamma_{i-1}$ e $\Gamma_{i+1}$ para $i\in \{2,3,...,k-2,k-1\}$ e $\Gamma_1\cap \Gamma_k = \emptyset$. Então todo ponto que está ao mesmo tempo na face exterior dos grafos $\Gamma_1\cup \Gamma_2$,..., $\Gamma_{k-1}\cup \Gamma_k$ está na face exterior do grafo $\Gamma_1 \cup ... \cup \Gamma_{k-1}\cup \Gamma_k$.
+ 
+\end{lem}
+ 
+\dem Seja $p$ um ponto de uma face limitada de $\Gamma_1 \cup ... \cup \Gamma_{k-1}\cup \Gamma_k$. Como $\Gamma_1 \cup ... \cup \Gamma_{k-1}\cup \Gamma_k$ é 2-conexo, então \textbf{2.5} nos diz que existe um ciclo $C$ em $\Gamma_1 \cup ... \cup \Gamma_{k-1}\cup \Gamma_k$ tal que $p$ está no interior deste ciclo. Escolha $C$ tal que $C$ está em $\Gamma_i \cup ... \cup \Gamma_j$ tal que $j-i$ é mínimo. Para provar o que queremos, basta mostrar que $j-i=1$; de fato, suponha que $j-i\geq 2$, assim, dentre todos os ciclos em $\Gamma_i \cup ... \cup \Gamma_j$ que possuem $p$ em seu interior, escolhemos o ciclo $C$ tal que o número de arestas em $C$ e fora de $\Gamma_{j-1}$ é mínimo. Como $C$ intercepta $\Gamma_{j-2}$ e $\Gamma_j$, tal ciclo possui em $\Gamma_{j-1}$ dois segmentos maximais, assim, seja $P$ um deles e seja $P'$ o menor caminho em $\Gamma_{j-1}$ de $P$ para $C-V(P)$, os extremos de $P'$ dividem $C$ em arcos $P_1$ e $P_2$, cada um contendo segmentos que não estão em $\Gamma_{j-1}$. Um dos ciclos $P'\cup P_1$ e $P'\cup P_2$ possui $p$ em seu interior, além disso, tal ciclo possui menos arestas que não estão em $\Gamma_{j-1}$ que $C$, o que contradiz a minimalidade na escolha de $C$. Com isto concluímos que um $C$ minimal não está na união minimal $\Gamma_i \cup ... \cup \Gamma_j$ com $j-i\geq 2$, provando o que queríamos. \eop
+
+Com isto, agora demonstraremos mais um resultado que, apesar de parecer extremamente óbvio, não é trivial de se provar:
+
+\begin{prop}
+
+    Seja $C$ uma curva simples em $\mathbb{R}^2$, então $\mathbb{R}^2\setminus C$ é conexo por caminhos. 
+
+\end{prop}
+
+\dem Sejam $p,q\in \mathbb{R}^2\setminus C$ e $d\in \mathbb{N}$ tal que a distância entre $p$ e $C$ e $q$ e $C$ seja maior que $3d$. Como $C$ é a imagem contínua e injetora do intervalo unitário fechado, podemos dividir $C$ em partições $C_i$ que unem os pontos $p_i$ e $p_{i+1}$ e tal que a distância entre $p_i$ e qualquer ponto de $C_i$ é menor que $d$, para $i\in \{1,2,...,k-1\}$. Seja então $d'$ o mínimo das distâncias entre $p_i$ e $p_j$ para $1\leq i\leq j-2 \leq k-2$. Note que $d'\leq d$. Para cada $i\in \{1,2,...,k\}$, particionamos $C_i$ em segmentos $C_{i,1},...,C_{i,k_i}$ que ligam os pontos $p_{i,1},...,p_{i,k_i +1}$ tal que a distância entre cada ponto de $C_{i,j}$ e o ponto $p_{i,j}$ é menor ou igual que $d'/4$. Assim, seja $\Gamma_i$ o grafo que é a união das fronteiras dos quadrados com lado de tamanho $d'/2$ e possuem $p_{i,j}$ como ponto central. Note que os grafos $\Gamma_i$ e os pontos $p,q$ satisfazem as condições do Lema \textbf{2.7}, logo tais pontos estão na mesma face do grafo e podem ser ligados por um caminho poligonal contido inteiramente na face.  \eop
+
+Se $C\subset \mathbb{R}^2$ é fechado e $\Omega$ uma componente conexa por caminhos de $\mathbb{R}^2\setminus C$, então um ponto $p\in C$ é acessível por $\Omega$ se existe algum ponto $q\in \Omega$ tal que existe um caminho simples poligonal ligando $p$ e $q$ e que cruza $C$ somente em $p$. Se $C$ for uma curva simples fechada, não é claro que qualquer ponto $p\in C$ é acessível de qualquer componente conexa por caminhos de $\mathbb{R}^2\setminus C$, porém, se $P$ é um caminho próprio em $C$ contendo um ponto $p$ fixo, temos pela proposição anterior, que $\mathbb{R}^2\setminus (C\setminus P)$ é conexo por caminhos, logo existe um caminho simples poligonal que liga $p$ com qualquer região de $\mathbb{R}^2\setminus C$ sem cruzar com $C\setminus P$, como $P$ pode ser escolhido tendo um tamanho arbitrariamente pequeno, concluímos que os pontos $p \in C$ acessíveis de qualquer componente conexa por caminhos de $\mathbb{R}^2\setminus C$ é no mínimo um conjunto denso em $C$. Com esta observação, podemos demonstrar finalmente o:
+
+\begin{thrm}
+ 
+    (Teorema da Curva de Jordan) Seja $C$ uma curva simples e fechada em $\mathbb{R}^2$, então $\mathbb{R}^2\setminus C$ tem exatamente duas componentes conexas por caminhos, ambas tendo $C$ como fronteira.
+ 
+\end{thrm}
+
+\dem Suponha, por absurdo, que $q_1$, $q_2$ e $q_3$ são pontos respectivamente de componentes conexas por caminhos distintas  $\Omega_1$, $\Omega_2$ e $\Omega_3$ de $\mathbb{R}^2\setminus C$. Sejam também $Q_1$, $Q_2$ e $Q_3$ segmentos de $C$ disjuntos dois a dois. Pela observação anterior, $\Omega_i$ possui um caminho simples poligonal $P_{i,j}$ ligando $q_i$ e $Q_j$. Podemos ainda supor que caminhos partindo do mesmo ponto $q_i$ se tocam somente neste ponto, já que, caso haja intersecção em outro ponto, usamos o fato de que este ponto é interior na região podemos definir um novo caminho que passa perto dele, porém não o toca, usando um argumento similar à demonstração de \textbf{1.8}. Claramente $P_{i,j}\cap P_{i',j'}=\emptyset$ se $i\neq i'$. Assim, tomando a união de $P_{i,j}$, podemos estendê-la, adicionando a ela segmentos de $Q_1$, $Q_2$ e $Q_3$, a um grafo planar isomorfo a $K_{3,3}$, contradizendo \textbf{2.3}. Como $\mathbb{R}^2\setminus C$ não é conexo por caminhos, conforme feito em \textbf{2.4}, a única conclusão que podemos ter é a de que $\mathbb{R}^2\setminus C$ tem exatamente duas componentes conexas por caminhos, que são $\text{int}(C)$ e $\text{ext}(C)$, sendo que a observação anterior implica que todo ponto de $C$ é ponto de fronteira de $\text{int}(C)$ e $\text{ext}(C)$. \eop
+
+Com isso foi possível demonstrar de forma relativamente elementar o Teorema da Curva de Jordan, que geralmente pode ser feito utilizando ferramentas mais específicas de Topologia Algébrica ou outras áreas mais avançadas. 
+
+Veremos agora alguns resultados que são generalizações de lemas já vistos:
+
+\begin{lem}
+ 
+    Seja $C$ uma curva simples fechada no plano $\mathbb{R}^2$ e $P$ uma curva poligonal simples em $\text{int}(C)$ que une dois pontos $p,q\in C$ e não toca qualquer outro ponto de $C$. Sejam $P_1$ e $P_2$ caminhos em $C$ que ligam $p$ e $q$. Então $\mathbb{R}^2\setminus(C\cup P)$ possui três componentes conexas cujas fronteiras são $C$, $P_1\cup P$ e $P_2\cup P$.
+    
+\end{lem}
+
+\dem Da mesma forma que na prova de \textbf{2.2}, a única parte não trivial é mostrar $\overline{\text{int}}(C)$ é particionado em pelo menos duas regiões, assim, fazemos uma construção de $L_1$ e $L_2$ análoga. Se as extremidades de $L_2$ estão na mesma componente conexa de $\mathbb{R}^2\setminus(C\cup P)$, então tal região contém uma curva poligonal $P_2$ tal que $P_3\cup L_2$ é uma curva simples poligonal fechada, pela prova de \textbf{2.1}, as extremidades de $L_1$ estão em componentes conexas diferentes de $\mathbb{R}^2\setminus(L_2\cup P_3)$. Porém elas estão na mesma região de $\mathbb{R}^2\setminus(L_2\cup P_3)$ já que estão ligadas por uma curva simples que não intercepta $P_3\cup L_2$, tal contradição prova o que queremos. \eop 
+
+Também temos a seguinte generalização: 
+
+\begin{lem}
+ 
+    Se $\Gamma$ é um grafo planar 2-conexo contendo um ciclo $C$ (que é uma curva simples fechada) tal que as arestas de $\Gamma\setminus C$ são curvas simples poligonais em $\overline{\text{int}}(C)$, então $\mathbb{R}^2\setminus(\Gamma)$ possui $|E(\Gamma)|-|V(\Gamma)|+2$ componentes conexas, cada uma contendo ciclos de $\Gamma$ como fronteiras.
+    
+\end{lem}
+ 
+Cuja a demonstração é exatamente a mesma de \textbf{2.5}, exceto que usaremos \textbf{3.2} em vez de \textbf{2.2}. Por fim, notamos que \textbf{2.6} também é válido quando a intersecção dos grafos contém um ciclo tal que todas as arestas fora deste ciclo são curvas simples poligonais no interior do ciclo, o qual pode ser uma curva simples fechada qualquer. O próximo passo agora será demonstrar um resultado mais geral e que será necessário para triangular superfícies. 
+
+\section{O Teorema de Jordan-Schönflies}
+
+Uma questão natural que surge no contexto das curvas simples fechadas é a seguinte: dada uma curva simples fechada $C$ no plano $\mathbb{R}^2$, será que existe um homeomorfismo $h:\mathbb{R}^2\rightarrow \mathbb{R}^2$ tal que $h(C)=S^1$, sendo $S^1$ a circunferência unitária? Com isso, seria possível afirmar que é possível transformar o plano de forma que a curva simples fechada vire uma circunferência e todas as propriedades topológicas do espaço sejam preservadas. E a resposta para esta questão é positiva:
+
+\begin{thrm}
+ 
+    (Teorema de Jordan-Schönflies) Sejam $C$ e $C'$ curvas simples fechadas no plano $\mathbb{R}^2$ e $f$ um homeomorfismo entre elas. Então existe um homeomorfismo $\Tilde{f}:\mathbb{R}^2\rightarrow \mathbb{R}^2$ que estende $f$.
+ 
+\end{thrm}
+
+Primeiramente notamos que, se $C$ e $C'$ são curvas simples fechadas e $\Gamma$ e $\Gamma'$ são grafos 2-conexos que consistem em $C$ e $C'$ respectivamente junto com curvas simples poligonais respectivamente em $\overline{\text{int}}(C)$ e $\overline{\text{int}}(C')$, então dizemos que $\Gamma$ e $\Gamma'$ são \textit{planarmente-isomorfos} (p-isomorfos) se existe um isomorfismo de grafos entre eles tal que cada ciclo de $\Gamma$ é fronteira de uma face em $\Gamma$ se, e somente se, a imagem desse ciclo pelo isomorfismo é a fronteira de uma face de $\Gamma'$ e o ciclo exterior de $\Gamma$ é mandado para o ciclo exterior de $\Gamma'$. Tendo isto, podemos demonstrar \textbf{3.1}. \\
+ 
+\textit{Demonstração (de \textbf{3.1})}: sem perda de generalidade, podemos supor que $C'$ é um polígono convexo (aqui usamos a forma que mais facilitará; em algumas provas, usa-se $S^1$, mas no nosso contexto essa é a melhor escolha). Primeiramente, estenderemos $f$ para um homeomorfismo entre $\overline{\text{int}}(C)$ e $\overline{\text{int}}(C')$. 
+ 
+Seja $B$ um conjunto enumerável denso em $\text{int}(C)$ (por exemplo, os pontos com coordenadas racionais). Como os pontos de $C$ que são acessível a partir de $\text{int}(C)$ são densos em $C$, podemos escolher um subconjunto $A$ enumerável de pontos acessíveis que ainda é denso. Seja $\{p_i : i\in \mathbb{Z}_{>0}\}$  uma sequência de pontos de $A\cup B$ tal que todos os pontos deste conjunto ocorrem na sequência uma quantidade infinita de vezes. Seja $\Gamma_0$ um grafo 2-conexo que consiste em $C$ e curvas poligonais simples em $\text{int}(C)$. Seja $\Gamma'_0$ o correspondente para $C'$ de tal forma que $\Gamma_0$ e $\Gamma'_0$ são p-isomorfos com isomorfismo $g_0$ tal que $g_0$ coincide com $f$ nos pontos em que ambas estão definidas. 
+ 
+Com isto, estendemos a função $f$ para que esteja definida em $C\cup V(\Gamma_0)$ de tal forma que coincida com $g_0$ em $V(\Gamma_0)$. Assim, queremos definir uma sequência de grafos $\Gamma_0, \Gamma_1 , ...$ e os respectivos correspondentes $\Gamma'_0, \Gamma'_1 , ...$ tais que, para todo $n>0$, $\Gamma_n$ é a extensão de uma subdivisão de $\Gamma_{n-1}$, $\Gamma'_n$ é a extensão de uma subdivisão de $\Gamma'_{n-1}$ e existe um p-isomorfismo $g_n$ entre $\Gamma_n$ e $\Gamma'_n$ que coincide com $g_{n-1}$ onde ambas estão definidas, e $\Gamma_n$ e $\Gamma'_n$ consistem respectivamente em $C$ e $C'$ e de curvas poligonais simples em $\text{int}(C)$ e $\text{int}(C')$, supomos também que $\Gamma_n\setminus C$ e  $\Gamma'_n\setminus C'$ são conexos. Desta forma, podemos estender a função $f$ para novos pontos em que $g_n$ está definida.
+ 
+Como o processo é indutivo, suponha que já definimos $\Gamma_0, \Gamma_1,..., \Gamma_{n-1},\Gamma'_0, \Gamma'_1,..., \Gamma'_{n-1}$ e  $g_0$,$g_1$,$...$, $g_{n-1}$. Com isto, definimos $\Gamma_n,\Gamma'_n$ e $g_n$ da seguinte forma: consideramos o ponto $p_n$ definido anteriormente, se $p_n\in A$, seja $P$ uma curva poligonal simples ligando $p_n$ e $q_n\in \Gamma_{n-1}\setminus C$ tal que $ \Gamma_{n-1}\cap P = \{ p_n, q_n\}$, assim, $\Gamma_n = \Gamma_{n-1}\cup P$. Associado a $P$, existe um ciclo $S$ que é fronteira da face onde $P$ foi definido, assim, adicionamos a $\Gamma'_{n-1}$ a curva poligonal simples $P'$ na face que tem como fronteira $g_{n-1}(S)$ tal que $P'$ liga $f(p_n)$ com $g_{n-1}(q_n)$ (se $q_n$ é vértice de $\Gamma_{n-1}$ ou algum ponto $g_{n-1}(a)$ (se $a$ é uma aresta de $\Gamma_{n-1}$ contendo $q_n)$. Ou seja, tomamos $\Gamma'_n=\Gamma'_{n-1}\cup P'$ e definimos um p-isomorfismo $g_n$ da maneira óbvia. Assim estendemos $f$ tal que $f(q_n)=g_n(q_n)$. 
+ 
+Caso $p_n \in B$, consideramos o maior quadrado com lados verticais e horizontais tendo $p_n$ como ponto central e está em $\overline{\text{int}}(C)$. Notamos que este quadrado não é adequado para adicionar a $\Gamma_{n-1}$, já que pode conter infinitos pontos de $C$, assim consideramos um segundo quadrado também com lados horizontais e verticais, cada um com comprimento menor que $1/n$. Dentro do novo quadrado, consideramos linhas verticais e horizontais se interceptando em $p_n$ e dividindo o novo quadrado em regiões de diâmetro menor que $1/n$.
+ 
+Seja $H_n$ a união entre $\Gamma_n$ e as linhas verticais e horizontais passando por $p_n$ e possivelmente mais curvas simples poligonais de forma que este novo grafo seja 2-conexo e $H_n\setminus C$ seja conexo. Por \textbf{1.9}, temos que $H_n$ de fato pode ser obtido a partir de $\Gamma_{n-1}$ adicionando sucessivamente novos caminhos nas faces. Com isso, adicionamos os caminhos correspondentes a $\Gamma'_{n-1}$ para obter $H'_n$ que é p-isomorfo a $H_n$. Com isto, adicionamos linhas verticais e horizontais em $\overline{\text{int}}(C')$ a $H_n$ de forma que o grafo resultante não tenha regiões limitadas com diâmetro maior ou igual que $1/(2n)$. Se necessário, fazemos mudanças nestas linhas de tal forma que $H'_n$ intercepta $C'$ apenas em pontos de $f(A)$ e toda face limitada possui diâmetro menor que $1/n$ e cada nova linha tem intersecção finita com $H'_n$. Isto estende $H'_n$ a um grafo que chamaremos de $\Gamma'_n$, assim adicionamos a $H_n$ curvas poligonais simples de forma que o novo gravo, denotado por $\Gamma_n$, seja p-isomorfo a $\Gamma'_n$. Com isto podemos definir $g_n$ e estender $f$ para que esteja definida em $V(\Gamma_n)$. Pode não parecer óbvio que este processo de estender os grafos funcione, mas tudo é feito de acordo com \textbf{1.9}.
+ 
+No final do processo, estendemos $f$ como uma bijeção entre $C\cup V(\Gamma_0)\cup V(\Gamma_1)\cup V(\Gamma_2)...$ e $C'\cup V(\Gamma'_0)\cup V(\Gamma'_1)\cup V(\Gamma'_2)...$, sendo que tais conjuntos são densos respectivamente em $\overline{\text{int}}(C)$ e $\overline{\text{int}}(C')$. Se $p\in \text{int}(C)$ não está no domínio da extensão de $f$, existe uma sequência $q_1,q_2,...$ de elementos no domínio da extensão que convergem para $p$. Assim, queremos mostrar que $f(q_n)$ converge para algum valor, que tomaremos como sendo $f(p)$ para completar a definição da extensão. Seja, assim, $d$ a distância entre $p$ e $C$ e seja $p_n$ um ponto de $B$ com distância menor que $d/3$ de $p$. Então $p$ está dentro de um quadrado em $\overline{\text{int}}(C)$ que tem $p_n$ como ponto central (e dentro do novo quadrado que definimos anteriormente). Por construção de $\Gamma_n$ e $\Gamma'_n$, existe um ciclo $S$ em $\Gamma_n$ em que $p\in \text{int}(S)$ e tanto $S$ quanto $g_n(S)$ estão em discos de raio $1/n$. Como a extensão de $f$ preserva pontos do interior de $S$ no interior de $S'$, segue que um rabo da sequência $f(q_n)$ está todo em $\text{int}(S')$, como $n$ é arbitrariamente grande, a sequência $f(q_n)$ é de Cauchy, portanto convergente.
+ 
+Com isto terminamos de definir a extensão de $f$ em $\overline{\text{int}}(C)$ (que chamaremos de $f$ por abuso de notação), além disso, notamos que $f$ é contínua em $\text{int}(C)$, já que preserva limites de sequências por construção. Como a função é bijetora e sua imagem é densa, podemos usar o mesmo argumento para mostrar que $f^{-1}$ é contínua em $\text{int}(C')$. Para concluir a demonstração, é preciso provar que esta extensão é contínua em pontos de $C$, para isto, é suficiente provar que, se $q_n$ converge para $q\in C$ então $f(q_n)$ converge para $f(q)$. Assim, suponha que não é o que acontece. Como $\overline{\text{int}}(C')$ é compacto, podemos supor sem perda de generalidade que $f(q_n)$ converge para $q'\neq f(q)$ (se a sequência não convergir, escolhemos uma subsequência que converge), além disso, $q'$ só pode estar em $C'$, já que nos interiores a função é contínua. Como $A$ é denso em $C$, então $f(A)$ é denso em $C'$, logo os arcos que ligam $q'$ e $f(q)$ em $C'$ possuem cada um $f(q_1)$ e $f(q_2)$ respectivamente, em $f(A)$. Para algum $n$, o grafo $\Gamma_n$ tem um caminho $P$ entre $q_1$ e $q_2$ tendo somente estes pontos em comum com $C$, por \textbf{2.3}, $P$ separa $\text{int}(C)$ em duas componentes conexas, as quais são levadas por $f$ para duas componentes conexas de $\text{int}(C')$, uma contém um rabo da sequência $f(q_n)$ enquanto a outra tem $f(q)$ em sua fronteira (mas não na fronteira que tem em comum com a outra componente). Isto é uma contradição, pois implica que não é possível ocorrer a convergência $f(q_n)\rightarrow q'$, o que contradiz o fato de $f$ ser uma extensão adequada para o interior da curva. 
+ 
+Por fim, resta estender $f$ a $\text{ext}(C)$, o que pode ser feito usando argumentos similares. Para este caso, consideramos um sistema de coordenadas no plano com as seguintes propriedades: sem perda de generalidade, supomos que $\text{int}(C)$ contém a origem e ambas as curvas estão no interior do quadrado com vértices $(\pm 1 , \pm 1)$. Sejam $L_1$, $L_2$ e $L_3$ segmentos de retas que passam pela origem ligando os pontos $(1,1)$, $(-1,-1)$ e $(1,-1)$ com os respectivos pontos de $C$. Seja $p_i$ o extremo de $L_i$ em $C$. Sejam $L'_1$ e $L'_2$ curvas simples poligonais ligando $f(p_1)$ a $(1,1)$ e $f(p_2)$ a $(-1,-1)$ respectivamente, tais que $L'_1\cap L'_2 = \emptyset$ e $L'_i$ têm somente seus extremos em comum com $C'$ e o quadrado. Assim podemos definir a curva poligonal simples $L_3$ ligando $f(p_3)$ a $(1,-1)$ ou a $(-1,-1)$ de forma disjunta com $L'_1\cup L'_2$ e tenso só os extremos em comum com $C'$ e o quadrado. Depois de fazer uma reflexão de $C'$ pela reta $x=y$ como eixo, se necessário, podemos supor que $L'_3$ está ligada com $(1,-1)$. Com isto, aplicando o método anterior, podemos estender $f$ para todo o quadrado como homeomorfismo de forma que, na fronteira, a função é a identidade. Logo, fora do quadrado, podemos definir $f$ como a identidade e isto termina a demonstração. \eop  
+ 
+Com isto podemos fazer algumas observações: se $F$ é um conjunto fechado no plano, dizemos que um ponto $p\in F$ é acessível por caminhos simples (ApCS) se, para cada ponto $q\notin F$, existe uma curva simples ligando $p$ e $q$ tendo apenas o ponto $p$ em comum com $F$. O Teorema que demonstramos implica que todo ponto numa curva simples fechada é ApCS, disto temos a seguinte generalização de \textbf{2.9}:
+ 
+\begin{thrm}
+  
+    Se $F$ é um conjunto fechado em $\mathbb{R}^2$ com pelo menos três pontos ApCS, então $\mathbb{R}^2\setminus F$ tem no máximo duas componentes conexas.
+  
+\end{thrm}
+ 
+\dem Sejam $p_1$, $p_2$ e $p_3$ os pontos ApCS de $F$ e  $q_1$, $q_2$ e $q_3$ pontos componentes conexas distintas de $\mathbb{R}^2\setminus F$. Da mesma forma como foi feito em \textbf{2.9}, obtemos um grafo planar isomorfo a $K_{3,3}$ com vértices em $p_1$, $p_2$, $p_3$, $q_1$, $q_2$ e $q_3$, contradizendo \textbf{2.3}. \eop 
+ 
+Por fim, podemos mostrar a seguinte generalização: 
+
+\begin{thrm}
+  
+    Sejam $\Gamma_1$ e $\Gamma_2$ grafos $2-conexos$ mergulhados no plano $\mathbb{R}^2$ com uma função $g$ entre eles que é um homeomorfismo e também um p-isomorfismo. Então $g$ pode ser estendida para um homeomorfismo  $\Tilde{g}:\mathbb{R}^2\rightarrow \mathbb{R}^2$.
+  
+\end{thrm}
+
+\dem A prova é feita por indução na quantidade de arestas de $\Gamma_1$. Se $\Gamma_1$ for um ciclo, então o resultado já foi provado, caso contrário, usamos \textbf{1.9} para concluir que $\Gamma_1$ tem um caminho $P$ a um subgrafo 2-conexo $\Gamma'_1$ contendo o ciclo exterior de $\Gamma_1$ tal que $\Gamma_1$ é obtido a partir de $\Gamma'_1$ adicionando $P$ em $\overline{\text{int}}(C)$, sendo $C$ a fronteira de uma face em $\Gamma'_1$. Assim, usamos a hipótese de indução para $\Gamma'_1$ os ciclos de $C\cup P$ contendo $P$ e isto termina a demonstração. \eop 
+ 
+\section{O Teorema da Triangulação de Superfícies}
+
+Finalmente temos aquilo que é necessário para demonstrar o fato de que toda superfície pode ser triangulada, ou seja, dada uma superfície, podemos encontrar um homeomorfismo entre ela e uma triangulação conforme \textbf{1.3}. Para tal, precisaremos de uma forma ainda mais simples de representar uma triangulação, além de que introduziremos a seguinte restrição: as superfícies deverão ser compactas e conexas (e, de agora em diante, sempre que falarmos de superfícies já estamos supondo que são compactas e conexas). A primeira delas já nos dá o seguinte:
+
+\begin{lem}
+
+    Um complexo simplicial compacto é finito.
+
+\end{lem}
+
+% https://math.stackexchange.com/questions/767100/is-a-compact-simplicial-complex-necessarily-finite
+
+\dem Podemos definir uma cobertura com o aberto obtido retirando os vértices unido com os abertos formados por bolas contendo os vértices e raio escolhido de forma que, se excluirmos uma bola, deixamos de ter uma cobertura (basta tomar raios menores que a metade do comprimento da menor aresta ligada ao vértice). Esta cobertura só tem ela própria como subcobertura e, como o complexo é compacto, ela deve ser finita. Como ela foi escolhida como sendo exatamente um aberto por vértice, a quantidade de vértices é finita, portanto o complexo deve ser finito. \eop
+
+Com isto, podemos representar as triangulações de forma mais simples: considere um conjunto finito de polígonos convexos no plano $\mathbb{R}^2$ disjuntos dois a dois e tal que o comprimento dos lados sejam todos iguais a $1$, assim, tomamos a união deste conjunto e todos os lados destes polígonos são identificados com o lado de algum outro ou do mesmo polígono, tomando a topologia quociente. Para que o espaço resultante seja uma superfície, precisamos que ele seja localmente homeomorfo ao plano $\mathbb{R}^2$ (basta que seja homeomorfo numa vizinhança de cada vértice). Se supomos que todos os polígonos são triângulos, o resultado do processo (que chamaremos de superfície triangulada) é equivalente a uma triangulação conforme \textbf{1.3} supondo a compacidade, já que claramente este espaço pode ser representado como um complexo simplicial que será uma triangulação e, por outro lado, triangulações podem ser projetadas no plano como conjunto de triângulos com lados identificados. 
+
+Esta segunda definição nos permite ainda interpretar estes polígonos no plano como mergulhos de grafos G, ou seja, uma triangulação também define um grafo $G$ com os vértices e arestas do espaço resultante (considerando as identificações) de tal forma que faces são homeomorfas a discos. Quando isso é possível, dizemos que o grafo é uma 2-célula. Com isto, podemos demonstrar o seguinte: 
+
+\begin{thrm}
+  
+    Toda superfície é homeomorfa a uma superfície triangulada.
+  
+\end{thrm}
+
+\dem Como o interior de um polígono convexo pode ser facilmente triangulado ligando os vértices num escolhido, é suficiente mostrar que uma superfície $S$ é homeomorfa a uma superfície formada por uma 2-célula mergulhada. Para cada ponto $p\in S$, seja $D(p)$ um disco no plano $\mathbb{R}^2$ homeomorfo a uma vizinhança de $p$. Dentro deste disco definimos dois quadriláteros $Q_1(p)$ e $Q_2(p)$ tais que $p\in \text{int}Q_1(p)) \subset \text{int}Q_2(p))$. Como $S$ é compacto, existem finitos pontos $p_i\in S$, $i=1,...,n$, tais que a pré-imagem de $Q_1(p_i)$ cobre $S$, portanto, podemos supor que os conjuntos $D(p_i)$ são dois a dois disjuntos. O objetivo da demonstração será mostrar que podemos modificar os homeomorfismos entre vizinhanças de $p_i$ e $D(p_i)$ de forma com que $Q_1(p_i)$ possa formar em S uma 2-célula mergulhada. 
+
+Vamos supor, assim, que os homeomorfismos foram escolhidos de modo que dois pares quaisquer entre $Q_1(p_1),...,Q_1(p_{k-1})$ possuem uma quantidade finita de pontos em comum (hipótese de indução sobre $k$). Devemos conseguir escolher o homeomorfismo para resolver $Q_1(p_{k})$ para que tenhamos a propriedade desejada. Dizemos que um segmento $P$ de algum dos quadriláteros $Q_1(p_1),...,Q_1(p_{k-1})$ é ruim quando liga dois pontos de $Q_2(p)$ e todos os outros pontos estão no interior deste quadrilátero. Seja $Q_2(p_k)$ um quadrilátero entre $Q_1(p_k)$ e $Q_2(p_k)$, assim, dizemos que este segmento ruim é muito ruim quando intercepta $Q_3(p_k)$. Podem existir infinitos segmentos ruim, porém apenas finitos segmentos muito ruins, os quais formam junto com $Q_2(p_k)$ um grafo 2-conexo $\Gamma$. Com isto, modificamos o grafo $\Gamma$ dentro de $Q_2(p_k)$ de tal forma que obtemos $\Gamma'$ que é p-isomorfo a $\Gamma$ e todas suas arestas são curvas simples poligonais, o que pode ser feito usando \textbf{1.9}. Agora aplicamos \textbf{3.3} para obter um isomorfismo em todo plano que transforma $\Gamma$ em $\Gamma'$ e mantém fixo o quadrilátero $Q_2(p_k)$. 
+
+Isto irá transformar os quadriláteros $Q_1(p_k)$ e $Q_3(p_k)$ em curvas simples fechadas $Q'_1$ e $Q'_3$ e $p_k$ estando no interior delas. Assim, consideramos a curva simples poligonal $Q''_3$ no interior de $Q_2(p_k)$ tal que $Q'_1$ está em seu interior e $Q''_3$ não intercepta segmentos ruins exceto os muito ruins (que são curvas simples poligonais). A existência de $Q''_3$ se dá da seguinte maneira: para cada ponto $p$ de $Q'_3$ consideramos $R(p)$ como sendo o quadrilátero que tem $p$ como ponto central e não intercepta nem $Q'_1$ e nem qualquer segmento ruim que não é muito ruim, assim, consideramos a cobertura finita minimal de $Q'_3$ por estes quadriláteros, cuja união é um grafo planar 2-conexo cujo ciclo exterior poderá ser definido como o $Q''_3$ que queremos.
+
+Considerando agora o grafo dado por $\Gamma'\cup Q''_3$ que é 2-conexo, podemos usar novamente \textbf{3.3} para poder supor que $Q''_3$ é, de fato, um quadrilátero tendo $Q'_1$ em seu interior. Tomando $Q''_3$ como a nova escolha para $Q_1(p_k)$, temos o que queríamos. Com isto, podemos supor que existe somente finitos segmentos muito ruins em cada $Q_2(p_i)$, os quais são curvas poligonais simples que formam um grafo planar 2-conexo, assim, a união $\bigcup_{i=1}^{n}Q_1(p_i)$ pode ser vista como um grafo $\Gamma$ em $S$ e cada componente conexa de $S\setminus \Gamma$ tem como fronteira um ciclo $C$ e $\Gamma$. Agora definimos no plano polígonos convexos $C'$ de lado com tamanho $1$ tal que seus vértices correspondem a vértices de $C$, com os quais construímos a superfície $S'$ que será gerada pelo mergulho da 2-célula $\Gamma'$ isomorfa a $\Gamma$. Este isomorfismo pode ser estendido para obter um isomorfismo entre $S$ e $S'$, bastando restringir o homeomorfismo entre os ciclos $C$ e $C'$ e aplicando \textbf{3.1} em cada ciclo. Com isto terminamos a demonstração. \eop
+
+\section{Classificação de Superfícies (Parte I)}
+
+O trabalho agora irá consistir em encontrar uma lista de superfícies e mostrar que qualquer superfície deverá ser homeomorfa a uma delas. Ainda restará a parte de mostrar que a lista encontrada possui de fato elementos que não são homeomorfos entre si e, para isso, precisaremos de um pouco de Topologia Algébrica. Como sabemos que toda superfície é triangulável, basta classificar as superfícies formadas por triângulos, ou, ainda, formadas por polígonos. 
+
+Seja $S$ uma superfície formada por triângulos no plano como anteriormente e sejam $T_1$ e $T_2$ triângulos distintos nesta superfície. Com isto, formamos uma nova superfície retirando o interior dos triângulos e identificando seus vértices. Tal identificação pode ser feita de duas formas possíveis: a primeira é identificando os pontos de tal forma que uma orientação no sentido horário no plano não irá coincidir quando compararmos os triângulos; a segunda é o caso em que as orientações concordam. E, por último, consideramos apenas um triângulo $T_1$ numa superfície, retiramos seu interior e identificamos pontos ``diametralmente opostos'' nele. Assim obtemos, respectivamente, três novas superfícies $S'$, $S''$ e $S'''$ e dizemos que elas foram obtidas a partir de $S$, respectivamente, adicionando uma alça, uma alça torcida e uma tampa cruzada. Com isso, se $G$ é a $2$-célula referente a $S$, podemos estender $G$ para comportar $S'$, $S''$ e $S'''$.
+
+Agora consideramos todas as superfícies obtidas a partir de uma esfera $S_0$ (que podemos identificar como um tetraedro) adicionando alças, alças torcidas e tampas cruzadas: adicionando $h$ alças obtemos $S_h$, adicionando $k$ tampas cruzadas obtemos a superfície $N_k$. Chamamos $S_1$, $N_1$ e $N_2$ de toro, plano projetivo real e garrafa de Klein respectivamente. Notamos, ainda, o seguinte: 
+
+\begin{lem}
+
+    A superfície $N_2$ é o mesmo que $S_0$ adicionando uma alça torcida.
+
+\end{lem}
+
+\dem Sejam $T_1$ e $T_2$ tetraedros disjuntos (que são homeomorfos a $S_0$). Selecione um triângulo em $T_1$ e em $T_2$ e adicione neste triângulo uma alça torcida ou duas tampas cruzadas, o que transforma os tetraedros em $T_1'$ e $T_2'$ respectivamente. Escolha uma representação da garrafa de Klein e uma triangulação $G$ nela. Para cada $i=1,2$ desenhe $G$ em $T_i'$ tais que as faces escolhidas para adicionar a alça e tampas seja a mesma em todas as triangulações, com isto, estenda o isomorfismo de grafos em G para um homeomorfismo de $T_1'$ e $T_2'$. Analogamente temos que adicionar à esfera uma alça e um tampa cruzada também resulta numa garrafa de Klein. \eop
+
+Com isto, temos:
+
+\begin{thrm}
+  
+    Seja $S$ uma superfície e $G$ a $2$-célula correspondente com $n$ vértices, $e$ arestas e $f$ faces. Então $S$ é homeomorfa a $S_h$ ou $N_k$ sendo que $h$ e $k$ são definidos pela equação: $$n-e+f = 2-2h = 2-k.$$
+  
+\end{thrm}
+
+\dem Primeiramente, queremos demonstrar que $$n-e+f \leq 2.$$ Para isto, notamos que podemos deletar arestas de $G$ até que ficamos com um sub-grafo conexo $H$ mínimo (ou seja, se tirarmos qualquer outra aresta ele deixa de ser conexo). Para cada aresta retirada, a quantidade de faces ou não muda ou diminui. Como $H$ tem $n$ vértices e $n-1$ arestas e apenas uma face, concluímos o que queríamos. 
+
+Com isto, iremos estender $G$ a uma triangulação de $S$ da seguinte forma: para cada face $F$ de $G$ que é um polígono convexo com arestas $v_1,...,v_q$, com $q\geq 4$, adicionamos novos vértices $u,u_1,...,u_q$ em $F$ e arestas $u_i v_i$, $u_i v_{i+1}$, $u_i u_{i+1}$ e $u_i u$ para $i=1,...,q$. Notamos que $n-e+f$ permanece constante com esta mudança. Assim, é suficiente provar o teorema no caso em que $G$ é uma triangulação, já que toda superfície é triangulável e a expressão $n-e+f$ é a mesma.
+
+Supomos, assim, por absurdo, que existe uma triangulação $G$ de uma superfície $S$ que serve de contra-exemplo para a afirmação do teorema. Esta triangulação deverá ter ao menos quatro vértices e: \\
+
+(i) $2-n+e-f$ é mínimo; \\
+
+(ii) $n$ é mínimo sujeito a (i) e \\
+
+(iii) a valência mínima $m$\footnote{A valência de um vértice é a quantidade de arestas que incidem nele.} de elementos em $G$ é mínima sujeita a (i) e (ii). \\
+
+Seja $v$ o vértice de valência mínima e sejam $v_1,...,v_m$ os vizinhos de $v$ tais que $v v_1v_2$, $v v_2 v_3$,...,$v v_m v_1$ são faces que incidem em $v$. Como $v_1$ e $v_m$ são ligados por uma aresta, temos que $m\geq 3$. Se $m=3$, então $G-v$ é uma triangulação de $S$ a menos que $n=4$ (neste caso temos um tetraedro, que não pode ser o caso), isto contradiz (ii). Logo $m\geq 4$.
+
+Se existe um índice $1\leq i \leq m$ tal que $v_i$ não está unido com $v_{i+2}$ por uma aresta, então seja $G'$ obtido a partir de $G$ deletando a aresta $v v_{i+1}$ e adicionando $v_i v_{i+2}$. Temos que $G'$ também é uma triangulação pra $S$, o que contradiz (iii). Assim concluímos que $G$ contém todas as arestas $v_iv_{i+2}$ para $1\leq i \leq m$ quando $v$ tem valência mínima.
+
+Lembramos que a superfície $S$ pode ser obtida identificado lados de triângulos dois a dois disjuntos no plano. Assim, seja $M$ a superfície formada pelos mesmos triângulos e a mesma identificação, exceto nos seis lados correspondentes às arestas $vv_1$, $v_1v_3$ e $v_3v$, os quais não serão identificados. Chamemos estes lados de fronteiras de $M$. Seja $G'$ o grafo cujos vértices correspondem a vértices dos triângulos que formam $M$ e suas arestas correspondem aos lados de rais triângulos. Notamos que $G'$ tem precisamente seis vértices que incidem na fronteira e em cada um deles incide exatamente duas arestas (que são de fronteira em $M$). Logo estes lados de fronteira formam um subgrafo $C$ de $G'$ com vértices tendo valência $2$. Existem apenas duas possibilidades: $C$ é um hexágono, ou $C$ são dois triângulos disjuntos.
+
+Suponha que $C$ seja dois triângulos disjuntos. Assim, adicionamos a $M$ mais dois triângulos disjuntos e seus interiores e identificamos seus lados com os lados dos triângulos de $C$, obtendo uma superfície $S'$ triangulada por $G'$. Agora suponha que $C$ seja um hexágono. Neste caso, adicionamos a $M$ um hexágono no plano junto com seu interior (o qual triangulamos) e identificamos seu lado com os lados de $C$. Desta forma, estendemos $M$ a uma superfície $S''$ e $G$ a um grafo $G''$ que triangula $S''$. Sejam $n',e',f',n'',e''$ e $f''$ o número de vértices, arestas e faces de $G'$ e $G''$ respectivamente. Temos que $$e'-n'+f' = e-n+f+2 \text{    e}$$ $$e''-n''+f'' = e-n+f+1.$$ Por (i), concluímos que $S'$ ou $S''$ é homeomorfo a uma superfície da forma $S_{h'}$ ou $N_{k'}$: note que $G'$ é obtido a partir de $G$ cortando o triângulo $vv_1v_3$, sendo que o segundo ainda é conexo por causa da aresta $v_2v_m$, logo os espaços $M$, $S'$ e $S''$ são conexos. Assim, se $C$ consiste em dois triângulos, então $S$ pode ser obtido a partir de $S'$ adicionando uma alça ou uma alça torcida. Se $C$ é um hexágono, então notamos que que $S$ pode ser obtido a partir de $S''$ adicionando uma tampa cruzada. No segundo caso, temos que S é homeomorfo a $N_{k'+1}$ ou $N_{2h'+1}$, contradição. Se $C$ é dois triângulos, por \textbf{5.1} e pelas definições e observações anteriores, temos que $S$ é homeomorfo a $N_{k'+2}$, $S_{h'+1}$ ou $N_{2h'+2}$, novamente uma contradição. \eop  
+
+Para completar a demonstração da classificação, é necessário provar que a lista de superfícies fornecidas são duas a duas não homeomorfas, para isto, faremos o seguinte roteiro: definiremos os grupos de homologia de complexos simpliciais e mostraremos que tais grupos são invariantes topológicos, em seguida, mostraremos que estes grupos nos fornecem a expressão $n-e+f$, o que é quase suficiente para completar a prova, afinal, isso implica que superfícies tais que o valor $n-e+f$ diferem não podem ser homeomorfas. Por fim, ainda restará mostrar que os casos $S_{h}$ e $N_{2h}$ não são homeomorfos, para isto temos alguns caminhos possíveis: um deles é simplesmente notar que orientabilidade é um invariante topológico e uma das superfícies é orientável e a outra não, outra forma é calculando explicitamente os grupos de homologia de cada caso. 
+
+\section{Homologia simplicial e a Classificação de Superfícies (Parte II)}
+
+Seja $K$ um complexo simplicial. Definimos $C_p(K)$ como um subespaço do p-produto exterior de $\mathbb{Z}$-módulos livres gerado por vértices que representam simplexos de dimensão $p$ da seguinte forma: dado um elemento $[v_0,...,v_p]\in K$ temos um elemento gerador correspondente $v_0\wedge ... \wedge v_p$ em $C_p(K)$, sendo que $\wedge$ denota o produto exterior de elementos de módulos. Com isto, definimos o mapa $\partial_p: C_p(K)\rightarrow C_{p-1}(K)$ (este mapa sempre depende e $K$, porém, por abuso de notação, iremos omitir o espaço) da seguinte forma (basta definir para um gerador): $$\partial_p(v_0\wedge ... \wedge v_p) =\sum_{i=0}^p (-1)^i v_0 \wedge ... \wedge \overset{ \wedge}{v_i} \wedge ... \wedge v_p, $$
+
+sendo $$v_0 \wedge ... \wedge \overset{ \wedge}{v_i} \wedge ... \wedge v_p = v_0 \wedge ... \wedge v_{i-1} \wedge v_{i+1} \wedge ... \wedge v_p.$$
+
+Desta forma, temos a seguinte sequência:
+
+$$\cdots\overset{\partial_{p+1}}{\rightarrow} C_p(K) \overset{\partial_p}{\rightarrow} C_{p-1}(K) \overset{\partial_{p-1}}{\rightarrow} \cdots \overset{\partial_{2}}{\rightarrow} C_{1}(K) \overset{\partial_{1}}{\rightarrow}C_{0}(K) \overset{\partial_{0}}{\rightarrow}\mathbb{Z}\rightarrow 0. $$
+
+Como consequência do seguinte resultado, tal sequência é exata:
+
+\begin{prop}
+
+    Para todo $p\geq 0$ vale $\partial_{p}\circ \partial_{p+1}=0$.
+
+\end{prop}
+
+\dem A demonstração consiste num cálculo direto: 
+
+
+$$\begin{array}{rcl}
+    \partial_p\circ \partial_{p+1}(v_0\wedge ... \wedge v_p\wedge v_{p+1}) & = & \partial_p \left(\displaystyle\sum_{i=0}^{p+1} (-1)^i v_0 \wedge ... \wedge \overset{ \wedge}{v_i} \wedge ... \wedge  v_{p+1} \right) \\
+     & = & \displaystyle\sum_{i=0}^{p+1} \displaystyle\sum_{j=0}^{p}  (-1)^{i} \lambda_j v_0 \wedge ... \wedge \overset{ \wedge}{v_i} \wedge ... \wedge  \overset{ \wedge}{v_j}\wedge ... \wedge v_{p+1} \\
+     & = & 0;
+\end{array}$$
+
+Pois, na soma, $$  (-1)^{i} \lambda_j v_0 \wedge ... \wedge \overset{ \wedge}{v_i} \wedge ... \wedge  \overset{ \wedge}{v_j}\wedge ... \wedge  v_{p+1} = - (-1)^{j} \lambda_i v_0 \wedge ... \wedge \overset{ \wedge}{v_j} \wedge ... \wedge  \overset{ \wedge}{v_i}\wedge ... \wedge  v_{p+1} $$
+
+e os termos se cancelam, já que $\lambda_j=(-1)^{j-1}$ se $j\geq i$ e $\lambda_j=(-1)^{j}$ se $j< i$. \eop
+
+Isto nos permite definir os grupos de homologia $H_p(K)=\text{ker}\partial_p / \text{Im} \partial_{p+1}$. Para chegar no resultado que precisamos, precisaremos de um lema técnico sobre grupos abelianos:
+
+\begin{lem}
+
+    Se $$0 \rightarrow E \overset{f}{\rightarrow} F \overset{g}{\rightarrow} G \rightarrow 0$$ é uma sequência exata curta de homomorfismos entre grupos abelianos e $F$ tem rank $r(F)$ finito (o rank de um grupo abeliano é a menor cardinalidade possível de um gerador), então $r(F=r(E)+r(G)$. Em particular, se $G$ é um grupo abeliano com rank finito e $H$ é um subgrupo, então $r(G)= r(H)+r(G/H)$.
+
+\end{lem}
+
+A demonstração deste fato já foge ao escopo do texto, mas é simples e pode ser encontrada em \textbf{[7]}, é basicamente a mesma demonstração do teorema do núcleo-imagem da Álgebra Linear junto com o primeiro Teorema do Isomorfismo. Com isto, temos o seguinte:
+
+\begin{thrm}
+  
+    Seja $K$ uma superfície definida por um complexo simplicial e seja $$\chi(K)=e-n+f$$ conforme a notação já usada aqui. Então $$\chi(K)=\sum_{i=0}^{2} (-1)^i r(H_i(K)).$$
+  
+\end{thrm}
+
+\dem Pelo lema anterior, temos que $$r(H_i(K))=r(\text{ker}\partial_i / \text{Im} \partial_{i+1}) = r(\text{ker}\partial_i)-r(\text{Im} \partial_{i+1}),$$ além disso: $$r(C_i(K)) =r(\text{ker}\partial_i)+r(\text{Im} \partial_{i-1})$$ e temos que a quantidade de geradores de $C_i(K)$ é exatamente a quantidade de simplexos de dimensão $i$ em $K$. Logo:
+
+$$\begin{array}{rcl}
+   \displaystyle\sum_{i=0}^{2} (-1)^i r(H_i(K)) & = & r(H_0(K))- r(H_1(K))+r(H_2(K))\\
+     & = &  r(\text{ker}\partial_0)-r(\text{Im} \partial_{1})- r(\text{ker}\partial_1)+r(\text{Im} \partial_{2})+r(\text{ker}\partial_2)-r(\text{Im} \partial_{3})\\
+     & = & r(C_0(K))-r(C_1(K))+r(C_2(K))\\
+     & = & e-n+f,
+\end{array}$$
+
+rearranjando os termos e notando que $\text{Im} \partial_{-1}$ e $\text{Im} \partial_{3}$ são triviais. \eop
+
+Resta atestar que a Homologia é, de fato, um invariante topológico, ou seja, dois complexos simpliciais homeomorfos deverão ter grupos de homologia isomorfos. Não apresentaremos uma demonstração explícita, pois ela é longa e técnica, mas comentaremos sobre algumas possíveis versões. Na primeira delas, que é explicada em \textbf{[8]}, basta provar que $C_p$ é um funtor, o resto são apenas detalhes técnicos. A segunda prova, apresentada em \textbf{[5]} (neste caso, foi feita para homologia singular, porém o argumento é análogo no caso simplicial) demosntra um pouco mais que isso: a homologia é um invariante homotópico, ou seja, espaços homotopicamente equivalentes possuem os mesmos grupos de homologia. Na mesma referência também tem uma terceira possibilidade: ao provar a equivalência entre homologia singular e simplicial, o resultado segue, já que a invariância topológica da homologia singular é imediata. Com isto, concluímos que o número $\chi(K)$ é um invariante topológico.  
+
+Finalmente, juntando com o que sabemos até agora, resta mostrar que os elementos $S_h$ e $N_{2h}$ não são dois a dois homeomorfos. Existem duas formas de ver isso: a primeira é definindo orientabilidade e mostrando que se trata de um invariante topológico. Isto é feito em \textbf{[3]}. Outra forma é simplesmente calculando os grupos de homologia destes espaços e notando que são distintos. Alguns dos grupos podem ser complicados para se calcular como o $H_1$, porém, será necessário apenas olhar para o $H_2$ nestes casos, pois temos o seguinte: 
+
+\begin{thrm}
+
+    Dado o inteiro positivo $h$, temos que $H_2(S_h) = \mathbb{Z}$ e $H_2(N_{2h}) = 0$. 
+
+\end{thrm}
+
+\dem Primeiramente, notamos que $H_2(K)=\text{ker}\partial_2 / \text{Im} \partial_{3}$, como $\text{Im} \partial_{3}$ é trivial, basta olhar $\text{ker}\partial_2$. Assim, basta calcularmos $\text{ker}\partial_2$ para um toro e notar que, ao adicionar uma alça, o espaço permanece o mesmo. Depois o processo para a garrafa de Klein é o mesmo: calcula-se o núcleo do mapa $\partial_2$ e notamos que ele não irá mudar caso adicionemos ao espaço uma alça torcida. A invariância por adicionar alças (torcidas ou não) se dá pelo seguinte: essa adição consiste, em $C_2(K)$, em eliminar duas faces; no caso da garrafa de Klein nem há o que fazer, já que a face eliminada não mudará o fato de que o núcleo do mapa é trivial, ele continuará sendo. No caso do toro em que o núcleo tem um gerador, notamos que este gerador não pode ser formado apenas por duas faces (que eliminadas fariam o núcleo ser trivial), uma vez que teríamos algo assim: 
+
+$$0=\partial_2(\lambda_1 v_1\wedge v_2\wedge v_3+\lambda_2 v_4\wedge v_5\wedge v_6)=\lambda_1 (v_2\wedge v_3- v_1\wedge v_3+v_1\wedge v_2)+\lambda_2 (v_5\wedge v_6- v_4\wedge v_6+v_5\wedge v_6),$$ para que a igualdade valha, é necessário que as faces sejam permutações umas das outras (que são apenas mudanças de orientação), uma vez que, se pelo menos um vértice for distinto, não é possível que isto esteja no núcleo. Assim, basta calcular os casos básicos. Para isto, usaremos a construção do retângulo feito em \textbf{[8]} e calcularemos de forma explícita as homologias. Como esse cálculo é um pouco grande para fazer na mão, usaremos um script em Python que encontra as matrizes dos operadores $\partial_i$ e usam a ideia e scripts em \textbf{[9]} (no caso, a função Smith e suas respectivas dependências, apresentadas no apêndice) para que as matrizes fiquem na forma normal de Smith, o que nos permite ver de forma clara (dentre outros aspectos) a dimensão do núcleo do operador. Assim, começamos inicializando as variáveis que representarão os vértices: \\
+
+\begin{lstlisting}[language=iPython]
+#nomes dos vértices
+a = 'a'
+b = 'b'
+c = 'c'
+d = 'd'
+e = 'e'
+f = 'f'
+v1 = 'v1'
+v2 = 'v2'
+v3 = 'v3'
+v4 = 'v4'
+v5 = 'v5'
+\end{lstlisting}\ \\
+
+Com isso definimos listas que contém listas de vértices que representam os geradores de $C_2(K)$ e $C_1(K)$ para $K$ sendo o toro e a garrafa de Klein: \\
+
+\begin{lstlisting}[language=iPython]
+#toro:
+C2_T2 = [[a,b,v5] , [a,d,v5] , [b,c,v5] , [c,v5,v2] , [c,a,v2],
+         [v2,d,a] , [d,v5,e] , [e,v5,v4] , [v5,v1,v2] , [v2,v1,v3] , [v4,v1,v3],
+         [v5,v1,v4] ,[v2,v3, d] , [v3,e,d] , [a,v4,e], [v4,a,b] , [b,v4,v3],
+         [c,b, v3] , [v3,c,a] , [v3,e,a]]
+C1_T2 = [[a,b] , [b,c] , [d,e] , [v5,v2] , [c,a] , [e,a], [a,d] , [d, v5] , 
+         [v2,d],[b,v5] , [c,v2] , [e,v4] , [v4,v3] , [v3,e], [v4,v5] , 
+         [v3,v2] , [v4,b] , [v3,c], [a,v5], [v5,v1], [v1,v3] , [v3,a], 
+         [e,v5], [v5,c], [a,v4] , [v4,v1], [v1,v2], [v2,a], [b,v3], [v3,d]]
+         
+#garrafa de Klein:
+C2_K2 = [[a,b,v5] , [a,d,v5] , [b,c,v5] , [c,v5,v2] , [c,a,v2],
+         [v2,e,a] , [d,v5,e] , [e,v5,v4] , [v5,v1,v2] , [v2,v1,v3] , [v4,v1,v3],
+         [v5,v1,v4] ,[v2,v3, e] , [v3,e,d] , [a,v4,e], [v4,a,b] , [b,v4,v3],
+         [c,b, v3] , [v3,c,a] , [v3,d,a]]
+C1_K2 = [[a,b] , [b,c] , [d,e] , [v5,v2] , [c,a] , [e,a], [a,d] , [d, v5] ,
+         [v2,e], [b,v5] , [c,v2] , [e,v4] , [v4,v3] , [v3,e], [v4,v5] , 
+         [v3,v2] , [v4,b] , [v3,c], [a,v5], [v5,v1], [v1,v3] , [v3,a], [e,v5],
+         [v5,c], [a,v4] , [v4,v1], [v1,v2], [v2,a], [b,v3], [v3,d]]
+         
+\end{lstlisting}\ \\
+
+
+O seguinte script irá gerar a matriz de $\partial_2$: \\ 
+
+\begin{lstlisting}[language=iPython]
+n = len(C1)
+o = len(C2)
+
+dell2 = [[0 for i in range(o)] for j in range(n)]
+
+for i in range(o):
+    for j in range(n):
+        dt = {}
+        for k in range(len(C2[i])):
+            temp = C2[i].copy()
+            temp.pop(k)
+            r = display(temp.copy())
+            dt[r] = k
+        te = C1[j][:]
+        ter = te.copy()
+        ter.reverse()
+        if display(te) in dt:
+            dell2[j][i] = (-1)**( dt[display(te)] )
+
+        elif display(ter) in dt:
+            dell2[j][i] = (-1)**( dt[display(ter)] + 1 )
+            
+\end{lstlisting}\ \\
+
+Por fim, iniciamos o script com: \\
+
+\begin{lstlisting}[language=iPython]
+C1 = C1_T2[:]
+C2 = C2_T2[:]
+\end{lstlisting}\ \\
+
+E colocamos para rodar com: \\
+
+\begin{lstlisting}[language=iPython]
+print(display(dell2)) #matriz antes
+print('\n')
+Smith(dell2)
+print(display(dell2)) #matriz depois
+\end{lstlisting}\ \\
+
+Que mostra as matrizes antes e depois do processo para deixar na forma normal de Smith. O que obtemos é o seguinte: \\
+
+\begin{lstlisting}[language=iPython]
+ 
+[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0]
+[0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+[0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]
+[1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]
+[0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0]
+[-1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1]
+[0, 0, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0]
+
+
+
+[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ 
+\end{lstlisting}\ \\
+
+Como temos, na forma de Smith, uma coluna inteira zerada, sabemos que o núcleo tem um gerador, portanto $H_2(S_1)=\mathbb{Z}$. Para a garrafa de Klein inicializamos com: \\ 
+
+\begin{lstlisting}[language=iPython]
+C1 = C1_K2[:]
+C2 = C2_K2[:]
+\end{lstlisting}\ \\
+
+E colocamos novamente para rodar com: \\ 
+
+\begin{lstlisting}[language=iPython]
+print(display(dell2)) #matriz antes
+print('\n')
+Smith(dell2)
+print(display(dell2)) #matriz depois
+\end{lstlisting}\ \\
+
+Obtendo a seguinte saída:
+
+\begin{lstlisting}[language=iPython]
+ 
+[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0]
+[0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]
+[0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]
+[1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0]
+[-1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1]
+[0, 0, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1]
+
+
+
+[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ 
+\end{lstlisting}\ \\
+
+Aqui não temos nenhuma coluna zerada, logo o núcleo é trivial, ou seja, temos que $H_2(N_{2})=0$. Isto termina a demonstração. \eop
+
+Observação: a escolha do segundo grupo de homologia para mostrar essa distinção não foi acidental ou arbitrária, na verdade, vale um resultado mais geral (que pode ser encontrado nas referências): uma superfície compacta conexa sem bordo $K$ é orientável se, e somente se, $H_2(K)=\mathbb{Z}$. Também vale que uma superfície compacta conexa sem bordo $K$ é não-orientável se, e somente se, $H_2(K)=0$. Adaptando um pouco a demonstração para acomodar casos mais gerais, mostramos que orientabilidade é um invariante topológico a partir da invariância da homologia. Outra observação é que esta forma normal não só é útil para ver o núcleo de um operador, mas olhando a sequência completa das matrizes dos operadores é possível saber o próprio grupo de homologia: note que temos um $2$ na coluna da matriz da garrafa de Klein, isso, com a informação da próxima matriz, possibilitará concluirmos que $H_1(N_2)=\mathbb{Z}\oplus\mathbb{Z} / (2 \mathbb{Z})$. Este método nos fornece uma forma efetiva de computar os grupos de homologia simplicial de qualquer complexo simplicial.
+
+Com isto, terminamos a classificação: mostramos, primeiro, que todas as superfícies compactas conexas e sem fronteira são trianguláveis e todas as superfícies trianguladas fazem parte de uma lista específica de superfícies. Definindo $\chi$, mostramos que este número associado às superfícies trianguladas é, de fato, um invariante topológico a partir da invariância da homologia simplicial, o que mostra que a lista de superfície é quase inteiramente formada por itens não homeomorfos, exceto para dois casos especiais. Nestes casos, mostramos explicitamente que não podem ser homeomorfos calculando de forma explícita os segundos grupos de homologia delas.
+
+\section{Referências}
+
+\ 
+
+\textbf{[1]} Engelking, Ryszard. \textit{General Topology}. Heldermann, 1989. \\ 
+
+\textbf{[2]} Schechter, Eric. \textit{Handbook of Analysis and Its Foundations: A Handbook}. 1st ed., Academic Press, 1996. \\ 
+
+\textbf{[3]} Lee, John. \textit{Introduction to Topological Manifolds}. New York, United States, Springer Publishing, 2011. \\ 
+
+\textbf{[4]} Thomassen, Carsten. “The Jordan-Schönflies Theorem and the Classification of Surfaces.” \textit{The American Mathematical Monthly}, vol. 99, no. 2, 1992, pp. 116–30. Crossref, doi:10.1080/00029890.1992.11995820. \\ 
+
+\textbf{[5]} Hatcher, Allen. \textit{Algebraic Topology}. 1st ed., Cambridge University Press, 2001. \\ 
+
+\textbf{[6]} Bukovský, Lev.  \textit{The Structure of the Real Line}. New York, United States, Springer Publishing, 2011. \\ 
+
+\textbf{[7]} Lang, Serge. \textit{Algebra} (Graduate Texts in Mathematics, 211). 3rd ed., Springer, 2002. \\ 
+
+\textbf{[8]} Munkres, James. Elements Of Algebraic Topology. 1st ed., CRC Press, 1993. \\ 
+
+\textbf{[9]}  \url{https://www.dlfer.xyz/post/2016-10-27-smith-normal-form/} \\ 
+
+
+\section{Apêndice}
+
+\begin{lstlisting}[language=iPython]
+def dims(M):
+ num_righe=len(M)
+ num_colonne=len(M[0])
+ return (num_righe,num_colonne)
+
+def MinAij(M,s):
+ num_righe, num_colonne=dims(M)
+ ijmin=[s,s]
+ valmin=max( max([abs(x) for x in M[j][s:]]) for j in range(s,num_righe) )
+ for i in (range(s,num_righe)):
+  for j in (range(s,num_colonne)):
+   if (M[i][j] != 0 ) and (abs(M[i][j]) <= valmin) :
+    ijmin = [i,j]
+    valmin = abs(M[i][j])
+ return ijmin
+
+def IdentityMatrix(n):
+ res=[[0 for j in range(n)] for i in range(n)]
+ for i in range(n):
+  res[i][i] = 1
+ return res
+
+def display(M):
+ r=""
+ for x in M:
+  r += "%s\n" % x
+ return r +""
+
+def swap_rows(M,i,j):
+ tmp=M[i]
+ M[i]=M[j]
+ M[j]=tmp
+
+def swap_columns(M,i,j):
+ num_of_columns=len(M)
+ for x in range(num_of_columns):
+  tmp=M[x][i]
+  M[x][i] = M[x][j]
+  M[x][j] = tmp
+
+def add_to_row(M,x,k,s):
+ num_righe,num_colonne=dims(M)
+ for tmpj in range(num_colonne):
+  M[x][tmpj] += k * M[s][tmpj]
+
+def add_to_column(M,x,k,s):
+ num_righe,num_colonne=dims(M)
+ for tmpj in range(num_righe):
+  M[tmpj][x] += k * M[tmpj][s]
+
+def change_sign_row(M,x):
+ num_righe,num_colonne=dims(M)
+ for tmpj in range(num_colonne):
+  M[x][tmpj] = - M[x][tmpj]
+
+def change_sign_column(M,x):
+ num_righe,num_colonne=dims(M)
+ for tmpj in range(num_righe):
+  M[tmpj][x] = - M[tmpj][x]
+
+def is_lone(M,s):
+  num_righe,num_colonne=dims(M)
+  if ([M[s][x] for x in range(s+1,num_colonne) if M[s][x] != 0] + 
+  [ M[y][s] for y in range(s+1,num_righe) if M[y][s] != 0] == []): 
+    return True
+  else:
+    return False
+
+def get_nextentry(M,s):
+  # find and element which is not divisible by M[s][s]
+  num_righe,num_colonne=dims(M)
+  for x in range(s+1,num_righe):
+   for y in range(s+1,num_colonne):
+    if M[x][y] % M[s][s]  != 0:
+     return (x,y)
+  return None
+
+
+def Smith(M):
+ num_righe,num_colonne=dims(M)
+ L = IdentityMatrix(num_righe)
+ R = IdentityMatrix(num_colonne)
+ maxs=min(num_righe,num_colonne)
+ for s in range(maxs):
+  while not is_lone(M,s):
+   i,j = MinAij(M,s) # the non-zero entry with min |.|
+   swap_rows(M,s,i)
+   swap_rows(L,s,i)
+   swap_columns(M,s,j)
+   swap_columns(R,s,j)
+   for x in range(s+1,num_righe):
+    if M[x][s] != 0:
+     k = M[x][s] // M[s][s]
+     add_to_row(M,x,-k,s)
+     add_to_row(L,x,-k,s)
+   for x in range(s+1,num_colonne):
+    if M[s][x] != 0:
+     k = M[s][x] // M[s][s]
+     add_to_column(M,x,-k,s)
+     add_to_column(R,x,-k,s)
+   if is_lone(M,s):
+    res=get_nextentry(M,s)
+    if res:
+     x,y=res
+     add_to_row(M,s,1,x)
+     add_to_row(L,s,1,x)
+    else:
+     if M[s][s]<0:
+      change_sign_row(M,s)
+      change_sign_row(L,s)
+ return L,R
+\end{lstlisting}\ \\
+
+\end{document}
